@@ -14,33 +14,34 @@
  */
 void dfp_init(void)
 {
-	dfp_get_volume();
-	HAL_Delay(3000);
-	dfp_get_volume();
-	HAL_Delay(3000);
-	dfp_set_volume(15);
-	HAL_Delay(3000);
-	dfp_get_volume();
-	HAL_Delay(3000);
-	dfp_get_volume();
-	HAL_Delay(3000);
-	dfp_get_volume();
+	u8 volume = 0u;
+
+	if (dfp_get_volume(&volume) == 0u)
+	{
+		if (volume > 20)
+		{
+			dfp_decrease_volume();
+		}
+		dfp_get_volume(&volume);
+	}
 }
 
 /**
  *
  */
-void dfp_get_volume(void)
+u8 dfp_get_volume(u8 *volume)
 {
 	u8 i = 0u;
+	u8 ret = 0u;
+
 	// 7E FF 06 43 00 00 00 FE B8 EF
 	u8 frame[10] = {0x7E, 0xFF, 0x06, 0x43, 0x00, 0x00, 0x00, 0xFE, 0xB8, 0xEF};
 
 	new_line();
-	print_string("Send : \t");
+	print_string("S : ");
 	for (i = 0u; i < 10u; i++)
 	{
-		print_u8(frame[i]); ht();
+		print_u8(frame[i]); space();
 	}
 	new_line();
 
@@ -54,18 +55,22 @@ void dfp_get_volume(void)
 		frame[i] = 0u;
 	}
 
-	if (HAL_UART_Receive(&huart1, frame, 10, 1000) != 0u) {
+	if (HAL_UART_Receive(&huart1, frame, 10, 1000) != HAL_OK) {
 		print_string("Error");
 		new_line();
+		ret = 1u;
 	}
 	else {
-		print_string("Rcv : \t");
+		print_string("R : ");
 		for (i = 0u; i < 10u; i++)
 		{
-			print_u8(frame[i]); ht();
+			print_u8(frame[i]); space();
 		}
 		new_line();
+		*volume = frame[6];
 	}
+
+	return ret;
 }
 
 /*
@@ -84,7 +89,7 @@ void dfp_set_volume(u8 volume)
 		print_string("Send : \t");
 		for (i = 0u; i < 10u; i++)
 		{
-			print_u8(frame[i]); ht();
+			print_u8(frame[i]); space();
 		}
 		new_line();
 
@@ -106,7 +111,7 @@ void dfp_set_volume(u8 volume)
 			print_string("Rcv : \t");
 			for (i = 0u; i < 10u; i++)
 			{
-				print_u8(frame[i]); ht();
+				print_u8(frame[i]); space();
 			}
 			new_line();
 		}
@@ -121,6 +126,7 @@ void dfp_set_volume(u8 volume)
  */
 void dfp_decrease_volume(void)
 {
+#if 0
 	u8 i = 0u;
 
 	// 7E FF 06 06 00 00 0F FF D5 EF
@@ -128,12 +134,16 @@ void dfp_decrease_volume(void)
 
 	for (i = 0u; i < 10u; i++)
 	{
-		print_u8(frame[i]); ht();
+		print_u8(frame[i]); space();
 	}
 	new_line();
 
 	HAL_UART_Transmit(&huart1, frame, 10, 1000);
-
+#else
+	HAL_GPIO_WritePin(VolumeDown_GPIO_Port, VolumeDown_Pin, GPIO_PIN_RESET);
+	HAL_Delay(2500);
+	HAL_GPIO_WritePin(VolumeDown_GPIO_Port, VolumeDown_Pin, GPIO_PIN_SET);
+#endif
 }
 
 /**

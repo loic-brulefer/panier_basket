@@ -13,7 +13,7 @@
 #include "project.h"
 
 void dfp_init(void);
-void dfp_get_volume(void);
+u8 dfp_get_volume(u8 *volume);
 void dfp_set_volume(u8 volume);
 void dfp_decrease_volume(void);
 void dfp_play(void);

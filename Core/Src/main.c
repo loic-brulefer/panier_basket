@@ -19,6 +19,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "tim.h"
 #include "usart.h"
 #include "gpio.h"
 
@@ -44,8 +45,9 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-u8 led_state = 0;
-u8 button_1 = 0;
+u8 led_state = 0u;
+u8 button_1 = 0u;
+u8 rxDFP[10] = {0u};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -89,11 +91,16 @@ int main(void)
 	MX_GPIO_Init();
 	MX_USART2_UART_Init();
 	MX_USART1_UART_Init();
+	MX_TIM16_Init();
 	/* USER CODE BEGIN 2 */
 	new_line(); new_line();
 	print_string("Start"); new_line();
 	HAL_Delay(1000);
 	dfp_init();
+	__HAL_TIM_CLEAR_FLAG(&htim16, TIM_FLAG_UPDATE);
+	HAL_TIM_Base_Start_IT(&htim16);
+	HAL_Delay(1000);
+	HAL_TIM_Base_Stop_IT(&htim16);
 	/* USER CODE END 2 */
 
 	/* Infinite loop */
@@ -109,15 +116,19 @@ int main(void)
 		HAL_Delay(1000);
 		HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
 		led_state = HAL_GPIO_ReadPin(LD2_GPIO_Port, LD2_Pin);
-
+#elif 0
 		button_1 = HAL_GPIO_ReadPin(B1_GPIO_Port, B1_Pin);
 		if (button_1 == 0u)
 		{
 			dfp_set_random_playback();
+			HAL_UART_Receive_IT(&huart1, rxDFP, 10);
+			HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
+			HAL_Delay(2000);
 		}
-		HAL_Delay(3000);
-		HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
+#else
+		led_state = HAL_GPIO_ReadPin(LD2_GPIO_Port, LD2_Pin);
 #endif
+
 		/* USER CODE END WHILE */
 
 		/* USER CODE BEGIN 3 */
@@ -155,7 +166,7 @@ void SystemClock_Config(void)
 			|RCC_CLOCKTYPE_PCLK1;
 	RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
 	RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-	RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
+	RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV16;
 
 	if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1) != HAL_OK)
 	{
