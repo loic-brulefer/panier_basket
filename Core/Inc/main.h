@@ -53,7 +53,7 @@ extern "C" {
 
 /* Exported functions prototypes ---------------------------------------------*/
 void Error_Handler(void);
-
+void end_of_song(void);
 /* USER CODE BEGIN EFP */
 
 /* USER CODE END EFP */
@@ -61,6 +61,7 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define B1_Pin GPIO_PIN_13
 #define B1_GPIO_Port GPIOC
+#define B1_EXTI_IRQn EXTI4_15_IRQn
 #define USART_TX_Pin GPIO_PIN_2
 #define USART_TX_GPIO_Port GPIOA
 #define USART_RX_Pin GPIO_PIN_3
@@ -78,7 +79,7 @@ void Error_Handler(void);
 #define VolumeDown_Pin GPIO_PIN_3
 #define VolumeDown_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
-
+#define DFP_ON 0
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

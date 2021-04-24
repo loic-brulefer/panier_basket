@@ -95,12 +95,11 @@ int main(void)
 	/* USER CODE BEGIN 2 */
 	new_line(); new_line();
 	print_string("Start"); new_line();
-	HAL_Delay(1000);
+	HAL_Delay(300);
+#if DFP_ON
 	dfp_init();
-	__HAL_TIM_CLEAR_FLAG(&htim16, TIM_FLAG_UPDATE);
-	HAL_TIM_Base_Start_IT(&htim16);
-	HAL_Delay(1000);
-	HAL_TIM_Base_Stop_IT(&htim16);
+#endif // DFP_ON
+	//	timer_start(&htim16, 1);
 	/* USER CODE END 2 */
 
 	/* Infinite loop */
@@ -125,7 +124,7 @@ int main(void)
 			HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
 			HAL_Delay(2000);
 		}
-#else
+#elif 0
 		led_state = HAL_GPIO_ReadPin(LD2_GPIO_Port, LD2_Pin);
 #endif
 
@@ -183,6 +182,19 @@ void SystemClock_Config(void)
 
 /* USER CODE BEGIN 4 */
 
+/**
+ *
+ */
+void end_of_song(void)
+{
+	HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
+	HAL_UART_AbortReceive_IT(&huart1);	// stop receive from DFP
+	timer_stop(&htim16, 1); // stop running timer
+#if DFP_ON
+	dfp_pause();
+	// \todo add waiting for response
+#endif // DFP_ON
+}
 /* USER CODE END 4 */
 
 /**

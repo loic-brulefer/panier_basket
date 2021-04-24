@@ -151,7 +151,18 @@ void dfp_decrease_volume(void)
  */
 void dfp_play(void)
 {
+	//
 	u8 frame[] = {0x7E, 0xFF, 0x06, 0x0D, 0x00, 0x00, 0x00, 0xFE, 0xEE, 0xEF};
+	HAL_UART_Transmit(&huart1, frame, sizeof(frame), 1000);
+}
+
+/**
+ *
+ */
+void dfp_play_next(void)
+{
+	//
+	u8 frame[] = {0x7E, 0xFF, 0x06, 0x0D, 0x00, 0x00, 0x00, 0xFE, 0xEE, 0xEF};	// \todo adjust
 	HAL_UART_Transmit(&huart1, frame, sizeof(frame), 1000);
 }
 
@@ -166,7 +177,7 @@ void dfp_pause(void)
 }
 
 /**
- *
+ * The first sound file conducted to be played is the first one in the device
  */
 void dfp_set_random_playback(void)
 {

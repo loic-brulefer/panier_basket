@@ -40,7 +40,7 @@ void MX_TIM16_Init(void)
 	htim16.Instance = TIM16;
 	htim16.Init.Prescaler = 60000 - 1;
 	htim16.Init.CounterMode = TIM_COUNTERMODE_UP;
-	htim16.Init.Period = 300 - 1;
+	htim16.Init.Period = 500 - 1;
 	htim16.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
 	htim16.Init.RepetitionCounter = 0;
 	htim16.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
@@ -95,13 +95,47 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* tim_baseHandle)
 
 /* USER CODE BEGIN 1 */
 
+/**
+ *
+ */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
+	// check the source of the interrupt
 	if (htim == &htim16)
 	{
-		HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
-		//		HAL_TIM_Base_Stop_IT(&htim16);
+		end_of_song();
 	}
+}
+
+/**
+ *
+ */
+void timer_start(TIM_HandleTypeDef *htim, u8 with_interrupt)
+{
+	__HAL_TIM_CLEAR_FLAG(htim, TIM_FLAG_UPDATE);	// avoid first direct interrupt
+	__HAL_TIM_SET_COUNTER(htim, 0u);
+
+	if (with_interrupt == 1u) {
+		HAL_TIM_Base_Start_IT(htim);
+	}
+	else {
+		HAL_TIM_Base_Start(htim);
+	}
+}
+
+/**
+ *
+ */
+void timer_stop(TIM_HandleTypeDef *htim, u8 with_interrupt)
+{
+	if (with_interrupt == 1u) {
+		HAL_TIM_Base_Stop_IT(htim);
+	}
+	else {
+		HAL_TIM_Base_Stop(htim);
+	}
+
+	__HAL_TIM_SET_COUNTER(htim, 0u);
 }
 
 /* USER CODE END 1 */

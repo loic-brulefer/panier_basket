@@ -17,6 +17,7 @@ u8 dfp_get_volume(u8 *volume);
 void dfp_set_volume(u8 volume);
 void dfp_decrease_volume(void);
 void dfp_play(void);
+void dfp_play_next(void);
 void dfp_pause(void);
 void dfp_set_random_playback(void);
 

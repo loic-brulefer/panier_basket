@@ -40,7 +40,8 @@ extern TIM_HandleTypeDef htim16;
 void MX_TIM16_Init(void);
 
 /* USER CODE BEGIN Prototypes */
-
+void timer_start(TIM_HandleTypeDef *htim, u8 with_interrupt);
+void timer_stop(TIM_HandleTypeDef *htim, u8 with_interrupt);
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus

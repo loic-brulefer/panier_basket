@@ -31,6 +31,7 @@ extern "C" {
 #include <stdlib.h>
 #include <string.h>
 #include "project.h"
+#include "tim.h"
 /* USER CODE END Includes */
 
 extern UART_HandleTypeDef huart1;
