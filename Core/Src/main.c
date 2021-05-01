@@ -99,7 +99,6 @@ int main(void)
 #if DFP_ON
 	dfp_init();
 #endif // DFP_ON
-	//	timer_start(&htim16, 1);
 	/* USER CODE END 2 */
 
 	/* Infinite loop */
@@ -192,7 +191,7 @@ void end_of_song(void)
 	timer_stop(&htim16, 1); // stop running timer
 #if DFP_ON
 	dfp_pause();
-	// \todo add waiting for response
+	HAL_Delay(100);
 #endif // DFP_ON
 }
 /* USER CODE END 4 */

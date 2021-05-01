@@ -33,6 +33,7 @@ u8 dfp_get_volume(u8 *volume)
 {
 	u8 i = 0u;
 	u8 ret = 0u;
+	u8 rx_frame[10] = {0u};
 
 	// 7E FF 06 43 00 00 00 FE B8 EF
 	u8 frame[10] = {0x7E, 0xFF, 0x06, 0x43, 0x00, 0x00, 0x00, 0xFE, 0xB8, 0xEF};
@@ -43,10 +44,10 @@ u8 dfp_get_volume(u8 *volume)
 	{
 		print_u8(frame[i]); space();
 	}
-	new_line();
 
 	HAL_UART_Transmit(&huart1, frame, 10, 1000);
 
+#if 0
 	//
 	// reset tab
 	//
@@ -71,6 +72,14 @@ u8 dfp_get_volume(u8 *volume)
 	}
 
 	return ret;
+#else
+	ret = dfp_get_response(rx_frame);
+	if (ret == 0u) {
+		*volume = rx_frame[6];
+	}
+
+	return ret;
+#endif
 }
 
 /*
@@ -184,4 +193,31 @@ void dfp_set_random_playback(void)
 	// 7E FF 06 18 00 00 00 FE E3 EF
 	u8 frame[] = {0x7E, 0xFF, 0x06, 0x18, 0x00, 0x00, 0x00, 0xFE, 0xE3, 0xEF};
 	HAL_UART_Transmit(&huart1, frame, sizeof(frame), 1000);
+}
+
+/**
+ *
+ */
+u8 dfp_get_response(u8 rx_frame[])
+{
+	u8 ret = 1u;
+	u8 i = 0u;
+
+	if (HAL_UART_Receive(&huart1, rx_frame, 10, 1000) != HAL_OK) {
+		new_line();
+		print_string("Error");
+	}
+	else {
+		new_line();
+		print_string("R : ");
+		for (i = 0u; i < 10u; i++)
+		{
+			print_u8(rx_frame[i]); space();
+		}
+		ret = 0u;
+	}
+
+	new_line();
+
+	return ret;
 }

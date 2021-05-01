@@ -76,7 +76,7 @@ void MX_GPIO_Init(void)
 	HAL_GPIO_Init(VolumeDown_GPIO_Port, &GPIO_InitStruct);
 
 	/* EXTI interrupt init*/
-	HAL_NVIC_SetPriority(EXTI4_15_IRQn, 0, 0);
+	HAL_NVIC_SetPriority(EXTI4_15_IRQn, 1, 0);
 	HAL_NVIC_EnableIRQ(EXTI4_15_IRQn);
 
 }
@@ -85,27 +85,22 @@ void MX_GPIO_Init(void)
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
 	/* simulate a new shoot */
-	static u8 first_shoot = 1u;
 
 	// if falling edge on push button
 	if (GPIO_Pin == B1_Pin) {
+		new_line();	print_string("BP blue");
 		end_of_song();
 #if DFP_ON
-		if (first_shoot == 1u) {
-			dfp_set_random_playback(); // play new sound
-			// first_shoot = 0u;
-		}
-		else {
-			// dfp_play_next(); // ?
-		}
+		dfp_set_random_playback(); // play new sound
 #endif // DFP_ON
 		timer_start(&htim16, 1); // start timer for X seconds
 		HAL_UART_Receive_IT(&huart1, rxDFP, 10); // wait for the sound to be finished
+		HAL_Delay(500);
+		__HAL_GPIO_EXTI_CLEAR_IT(GPIO_Pin);
 	}
 	else {
 		//		__NOP();
 	}
-	//	HAL_Delay(500);		// stay stuck in infinite loop
 }
 /* USER CODE END 2 */
 

@@ -20,5 +20,6 @@ void dfp_play(void);
 void dfp_play_next(void);
 void dfp_pause(void);
 void dfp_set_random_playback(void);
+u8 dfp_get_response(u8 rx_frame[]);
 
 #endif /* INC_DFPLAYER_MINI_H_ */

@@ -32,6 +32,7 @@ extern "C" {
 #include <string.h>
 #include "project.h"
 #include "tim.h"
+#include "dfplayer_mini.h"
 /* USER CODE END Includes */
 
 extern UART_HandleTypeDef huart1;

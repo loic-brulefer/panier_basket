@@ -29,6 +29,7 @@ extern "C" {
 
 /* USER CODE BEGIN Includes */
 #include "tim.h"
+#include "dfplayer_mini.h"
 /* USER CODE END Includes */
 
 /* USER CODE BEGIN Private defines */

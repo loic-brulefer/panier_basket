@@ -53,9 +53,9 @@ extern "C" {
 
 /* Exported functions prototypes ---------------------------------------------*/
 void Error_Handler(void);
-void end_of_song(void);
-/* USER CODE BEGIN EFP */
 
+/* USER CODE BEGIN EFP */
+void end_of_song(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
@@ -79,7 +79,7 @@ void end_of_song(void);
 #define VolumeDown_Pin GPIO_PIN_3
 #define VolumeDown_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
-#define DFP_ON 0
+#define DFP_ON 1
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
