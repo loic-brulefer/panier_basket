@@ -78,9 +78,6 @@ void end_of_song(void);
 #define TCK_GPIO_Port GPIOA
 #define VolumeDown_Pin GPIO_PIN_3
 #define VolumeDown_GPIO_Port GPIOB
-#define IR_sensor_Pin GPIO_PIN_5
-#define IR_sensor_GPIO_Port GPIOB
-#define IR_sensor_EXTI_IRQn EXTI4_15_IRQn
 /* USER CODE BEGIN Private defines */
 #define DFP_ON 1
 /* USER CODE END Private defines */

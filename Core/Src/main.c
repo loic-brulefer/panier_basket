@@ -92,6 +92,7 @@ int main(void)
   MX_USART2_UART_Init();
   MX_USART1_UART_Init();
   MX_TIM16_Init();
+  MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
 	new_line(); new_line();
 	print_string("Start"); new_line();
